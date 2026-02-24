@@ -1,0 +1,253 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -128,
+        0
+      ],
+      "id": "f48fb3ed-800d-43cd-be1b-543a4542256d",
+      "name": "Telegram Trigger",
+      "webhookId": "73533079-b45f-4f5e-a35a-1ee7f87a0292",
+      "credentials": {
+        "telegramApi": {
+          "id": "kRGSoxFuzWFPT3yH",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "System Message:\n\nYou are a helpful assistant responsible for retrieving inventory data and sending emails using the following tools:\n\nInventory Sheet Mock Data\n\nEmail Tool: Use this tool to send emails.\n\nEmail and Inventory Handling\n\nInventory Database: Use this to retrieve any data related to inventory.\n\nEmail Report Instructions\n\nAlways choose the email subject line yourself based on the context of the conversation. Never ask the user to provide the subject."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "0c3806c0-cbfe-4b5d-b1db-2cb861fd75b0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        800,
+        0
+      ],
+      "id": "5783aad9-16c2-4388-bfae-f81aaa2130cc",
+      "name": "Send a text message",
+      "webhookId": "03939ce2-60ab-49e4-b520-aaa668cc6156",
+      "credentials": {
+        "telegramApi": {
+          "id": "kRGSoxFuzWFPT3yH",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        336
+      ],
+      "id": "1dae1575-8cef-40a3-90e3-bce102917084",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0tHFT5l3veH6HtVE",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=6650722912"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        208
+      ],
+      "id": "dd4ce197-1f8b-4e53-b150-b0e36d7b5d44",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use This Tool To Get inventory Data",
+        "documentId": {
+          "__rl": true,
+          "value": "1zLY19j6ehwDsxxtedpUbvFlBg3OKXabnAJWMDGDwIsk",
+          "mode": "list",
+          "cachedResultName": "inventorySheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zLY19j6ehwDsxxtedpUbvFlBg3OKXabnAJWMDGDwIsk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zLY19j6ehwDsxxtedpUbvFlBg3OKXabnAJWMDGDwIsk/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        688,
+        288
+      ],
+      "id": "2b91c25b-d112-4428-a37a-5a03b5ee53e3",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DQkbVYkGtEG2VDUd",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this Tool To Send Email ",
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        208
+      ],
+      "id": "cb015d46-386a-45ba-bfdd-9953d154212b",
+      "name": "Send a message in Gmail",
+      "webhookId": "ed2f8f78-6c18-41cb-9943-ee705b60a670",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "TniwQxazZpMIovit",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "e7965287-a357-4da0-9a42-8ab81168acf5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "94cb5dd0e3589bf678c3be2eb8e8ba5c0daaa9ba8932c12dcbe5ca01a2d6bd14"
+  },
+  "id": "3H2W8pprzwJLWuB7GD0_l",
+  "tags": []
+}

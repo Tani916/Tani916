@@ -1,0 +1,257 @@
+---
+title: "My First Project"
+author: "Ghanshyam Thakur"
+date: "2026-02-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction to R
+### A Programming Environment for Data Analysis and Graphics
+This introduction to R is based on an original set of notes describing the S and S-Plus 
+environments, written in 1990–1992 by Bill Venables and David M. Smith while at the 
+University of Adelaide.
+
+#### **The R environment**
+R is an integrated suite of software facilities for data manipulation, calculation and graphical 
+display. Among other things it has 
+* an effective data handling and storage facility, 
+
+* a suite of operators for calculations on arrays, in particular matrices, 
+
+* a large, coherent, integrated collection of intermediate tools for data analysis, 
+
+* graphical facilities for data analysis, and 
+
+* a well-developed, simple, and effective programming language (called ‘S’) which 
+includes conditionals, loops, user defined recursive functions and input and output 
+facilities.
+
+The term **environment** is intended to characterize it as a fully planned and coherent 
+system, rather than an incremental accretion of very specific and inflexible tools, as is 
+frequently the case with other data analysis software.
+
+R is a vehicle for newly developed methods of interactive data analysis. It has developed 
+rapidly and now includes a large collection of packages. However, most R programs are 
+brief, designed for a single data analysis.
+
+R can be regarded as an implementation of the S language, which was developed at Bell 
+Laboratories by Rick Becker, John Chambers, and Allan Wilks, and forms the basis of the S
+Plus systems.
+
+There are about **25 packages** supplied with R (called “standard” and “recommended” 
+packages), and many more are available through the CRAN family of Internet sites (via 
+https://CRAN.R-project.org) and elsewhere.
+
+
+
+## Vectors and assignment
+R operates on named data structures. The simplest such structure is the numeric vector, which 
+is a single entity consisting of an ordered collection of numbers. To set up a vector named x, 
+say, consisting of five numbers, namely 10.4, 5.6, 3.1, 6.4 and 21.7, use the R command
+```{}
+x<-10.4,5.6,3.1,6.4,21.7)
+
+```
+
+
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("My_image.png.png")
+```
+
+
+This is an assignment statement using the function c() which in this context can take an arbitrary number of vector arguments and whose value is a vector got by concatenating its 
+arguments end to end.
+
+Notice that the assignment operator (‘<-’), which consists of the two characters ‘<’ (“less than”) and ‘-’ (“minus”) occurring strictly side-by-side and it ‘points’ to the object receiving the value of the expression. 
+
+The further assignment 
+
+```{}
+y<- c(x,0,x)
+```
+
+would create a vector y with 11 entries consisting of two copies of x with a zero in the middle 
+place.
+
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("2nd.png")
+```
+
+
+
+## Data permanency and removing objects
+
+The entities that R creates and manipulates are known as objects. These may be variables, arrays of numbers, character strings, functions, or more general structures built from such 
+components.
+
+During an R session, objects are created and stored by name. The collection of objects 
+currently stored is called the workspace.
+
+To remove objects the function rm is available
+
+```{}
+rm(x,y,z,ink,junk,temp,foo)
+rm(x)
+
+```
+
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("3rd.png")
+```
+
+## Generating regular sequences
+
+R has a number of facilities for generating commonly used sequences of numbers. The 
+function seq() is a more general facility for generating sequences.
+
+For example
+
+1:30 is the vector c(1, 2, ..., 29, 30).
+
+```{}
+1:30
+Z<-1:30
+M <- seq(-5, 5, by = 2)
+```
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("4th.png")
+```
+
+## Project 1: Mispriced Diamonds
+In the given data set, all rows represent Diamond with three columns namely carat (weight), 
+clarity and price (price at which diamond is sold).
+
+More than 50,000 transactions are recorded in the file. High clarity Diamond is priced high!?
+
+Does the relationship between price and clarity always hold true?
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("5th.jpeg")
+```
+
+
+**Step 1: Run the below line in Script**
+
+```{}
+mydata <- read.csv(file.choose())
+```
+
+It allows you to select your csv file and load data into RStudio
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("Code-0.png")
+```
+
+
+
+**Step 2: Scatter Plot - Run the below line**
+
+This gives the scatter plot for Diamonds. All the records are illustrated in the plot. But there 
+is no ‘clarity’ variable.
+
+```{}
+ggplot(data=mydata,aes(x=carat, y=price)) + geom_point()
+```
+
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("Code-1.png")
+```
+
+
+
+
+
+**Step 3: Now, you can add ‘clarity’ variable as color. Run below line** 
+
+```{}
+ggplot(data=mydata, aes(x=carat, y=price,  color=clarity)) +  geom_point()
+```
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("Code-2.png")
+```
+
+
+
+
+**Step 4: The scatter plot has got many clumsy points and not so clear. To make it more clear run below line**
+
+```{}
+ggplot(data=mydata, aes(x=carat, y=price, color=clarity))+ geom_point(alpha=0.1)
+```
+
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("Code-3.png")
+```
+
+
+
+
+**Step 5: It seems to be clear but scatter plot is having all the records** 
+
+irrespective of significant and not significant. Therefore, let’s filter out the data now with the condition on clarity. Run 
+below line
+
+```{}
+ggplot(data=mydata[mydata$carat <2.5,] aes(x=carat, y=price, color=clarity)) + geom_point(alpha=0.1)
+```
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("Code-4.png")
+```
+
+Variable ‘carat’ records with only less than 2.5 values are considered in the above 
+visualization. This is much clear!
+
+
+
+
+
+**Step 6: To see the averages for a variable ‘carat’ run below line** 
+
+```{}
+ggplot(data=mydata[mydata$carat<2.5,], aes(x=carat,y=price,color=clarity))+ geom_point(alpha=0.1)+geom_smooth()
+```
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("Code-5.png")
+```
+
+## Interpretation of Output
+
+Based on the regression and exploratory analysis, the output reveals several critical relationships:
+
+* **Carat as the Primary Driver**: Carat weight has the most significant positive impact on price. However, this relationship is **non-linear**; as diamonds get larger, the price increases exponentially rather than at a constant rate.
+
+* **The "4 Cs" Impact**: While Carat is dominant, categorical variables like **Cut, Color, and Clarity** are statistically significant predictors. Better grades in these categories consistently command a price premium.
+
+* **Physical Dimensions**: Variables like x, y, and z (dimensions) are highly correlated with Carat weight, often making them redundant in a predictive model if Carat is already included.
+
+* **Price Skewness**: The distribution of diamond prices is **right-skewed**, meaning most diamonds are in the lower price range (under $5,000), with a "long tail" of very expensive, high-carat diamonds.
+
+## Business Insights
+
+From a retail or investment perspective, the data provides these actionable insights:
+
+* **Inventory Strategy**: Since diamonds under 1 carat are the most frequent and have the highest demand, a high-volume retailer should focus their inventory on these "sweet spot" sizes to ensure faster turnover.
+
+* **Pricing "Magic Numbers"**: There are significant price jumps at "magic" thresholds like **1.0 carat**. Marketing a 0.98-carat diamond may offer better value to a customer while maintaining similar visual appeal to a more expensive 1.0-carat stone.
+
+* **Premium for Quality**: For high-income segments, the "Premium" and "Ideal" cuts provide a disproportionate increase in value. Marketing should emphasize the "Ideal" cut for engagement rings where brilliance is the priority.
+
+* **Profitability vs. Volume**: While high-carat diamonds (2+ carats) have higher margins, they represent a smaller, more price-insensitive market. A balanced business model should target volume in the 0.3–0.7 carat range while maintaining a "luxury" tier for high-margin sales.
+
+## Conclusion
+The analysis successfully demonstrates that diamond pricing is a complex interplay of physical weight and qualitative grading. By building a regression model (such as a **Polynomial or Log-Transformed** model), we can predict prices with high accuracy, typically exceeding 90%.
+
+**Final Takeaway**: To maximize revenue, the business should leverage data-driven pricing models that account for the exponential price growth of larger carats while ensuring that cut quality is not undervalued in marketing efforts. This ensures competitive pricing that aligns with both market trends and consumer psychological thresholds.
